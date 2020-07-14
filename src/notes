@@ -1,0 +1,24 @@
+Breton's Pen Breakdown
+
+- General Idea -
+
+- App is a way for people to read scripts or create/add to a script utilizing the exquisite corpse model.
+- Non-users can read scripts but they cannot add or create scripts.
+- Logged in user can add or create scripts.
+- Unsure of how long the script can go on for. Set page limit or time limit? (1 page is ~= 1 minute)
+
+1. Page - Creating a script
+    - Script is set with characters (2 currently)
+    - Set the location/setting
+    - Once this is set, they can then click go which creates a timer.
+    - They can start typing a script until the time ends.
+    - Script is saved.
+    - User cannot go back and edit what they have created.
+
+2. Page - Continue a script
+    - Randomly assigned
+    - Can see names and setting?
+    - Click start and user is prompted
+    - They can start typing a script until the time ends.
+    - script is saved.
+    - user cannot go back and edit what they created
