@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
 
 const App = () => {
-    const [script, setScript] = useState('');
+    const [script, setScript] = useState([]);
     const [snippet, setSnippet] = useState('');
+    const [lineCount, setLineCount] = useState('')
     const [story, setStory] = useState('');
+    const [completeStory, setCompleteStory] = useState('');
     const [user, setUser] = useState([]);
     const [users, setUsers] = useState({});
 
@@ -14,19 +16,22 @@ const App = () => {
         },
         {          
             'Jeff': {
-                '0': 'This is ',
-                '2': 'of a girl ',
-                '4': 'and drowned the whole world. '
-            }},
-            {        
+                '0': 'This is',
+                '2': 'of a girl',
+                '4': 'and drowned the whole world.'
+            }
+        },
+        {        
             'Harry': {
-                '1': 'the story ',
-                '3': 'who cried a river '
-            }},
-            {
+                '1': 'the story',
+                '3': 'who cried a river'
+            }
+        },
+        {
             'Jess': {
                 '5': 'And when she smiles'
-                }}
+            }
+        }
     ];
     
     useEffect(() => {
@@ -39,12 +44,19 @@ const App = () => {
         }
     }, [])
 
+    useEffect(() => {
+        setSnippet(arrangeStory(script));
+        const tempUsers = [];
+        script.forEach(item => tempUsers.push((Object.keys(item))[0]));
+        setUsers(tempUsers);
+    }, [script])
+
     const arrangeStory = (random) => {
         const completeStory = [];
         random.forEach(element => {
             // Get username
             const user = Object.keys(element);
-            if(user[0] === 'count') return;
+            if(user[0] === 'count') setLineCount(element['count']);
             // Get array of keys
             const stories = Object.keys(element[user]);
             // loop through the keys and create the story
@@ -53,35 +65,42 @@ const App = () => {
                 completeStory[place*1] = element[user][place];
             })
         });
-        // return completeStory.join().replace(/,/g, '');
+        setCompleteStory(completeStory.join().replace(/,/g, ' '));
         return completeStory[completeStory.length - 1]
     };
 
     const addStory = () => {
         // Currently replacing all values as opposed to updating it
-        const currentScript = [...script];
-        const num = currentScript[0]['count'].toString();
+        const currentNum = script[0]['count'];
 
         if(!users.includes(user)) {
             const newUser = {};
-            newUser[user] = {[num]: story};
-            currentScript.push(newUser)
+            newUser[user] = {[currentNum]: story};
+            setScript([...script, newUser])
         } else {
-            const currentUser = currentScript[users.indexOf(user)]
-            console.log(currentScript[users.indexOf(user)])
-            // currentScript[users.indexOf(user)][num] = story
+            const currentUserIdx = users.indexOf(user)
+            const currentUser = script[currentUserIdx]
+            currentUser[user][currentNum] = story;
+            const newMap = script.map(item => {
+                if(item[user] === currentUser[user]) currentUser;
+                return item;
+            });
+            setScript(newMap)
         }
+        
+        script[0]['count']++;
+        setUser('');
+        setStory('');
 
-        currentScript[0]['count']++;
-        setScript(currentScript)
     }
 
+    
     return(
         <div>
             <h1>Breton's Pen</h1>
             <h3>An exquisite corpse monologue and scene repository</h3>
             <div>
-                <h2>Current Story</h2>
+                <h2>Story Snippet</h2>
                 <p>{snippet}</p>
             </div>
             <div>
@@ -90,6 +109,12 @@ const App = () => {
                 <label>Story: <textarea placeholder='story' onChange={ev => setStory(ev.target.value)} value={ story }></textarea></label>
                 <br/>
                 <button onClick={addStory}>Add Story</button>
+            </div>
+            <hr/>
+            <div>
+                <p>Current lines: {lineCount}</p>
+                <h3>Current Story</h3>
+                <p>{ completeStory }</p>
             </div>
         </div>
     )
